@@ -1,0 +1,119 @@
+[gd_scene load_steps=13 format=3 uid="uid://dv6r14qcy74qk"]
+
+[ext_resource type="Script" path="res://scripts/character/character.gd" id="1_g361i"]
+[ext_resource type="Texture2D" uid="uid://cmdwm0d7ljjey" path="res://assets/character.png" id="2_31onf"]
+[ext_resource type="Script" path="res://addons/smoothing/smoothing_2d.gd" id="2_b50jg"]
+[ext_resource type="PackedScene" uid="uid://b2wdh0olth8lw" path="res://scenes/character/grappling_hook.tscn" id="2_x1rr5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ig21s"]
+atlas = ExtResource("2_31onf")
+region = Rect2(0, 0, 14, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4j6nu"]
+atlas = ExtResource("2_31onf")
+region = Rect2(14, 0, 14, 12)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_r6ynm"]
+animations = [{
+"frames": [{
+"duration": 30.0,
+"texture": SubResource("AtlasTexture_ig21s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4j6nu")
+}],
+"loop": true,
+"name": &"looking_left",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w31ol"]
+size = Vector2(11, 12)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_aw4tq"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 5.0
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 50.0
+radial_accel_max = 50.0
+
+[sub_resource type="Animation" id="Animation_cuf1a"]
+resource_name = "death"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.112656, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hhg0d"]
+_data = {
+"death": SubResource("Animation_cuf1a")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ahj47"]
+size = Vector2(5, 5)
+
+[node name="Character" type="CharacterBody2D"]
+script = ExtResource("1_g361i")
+hook_scene = ExtResource("2_x1rr5")
+
+[node name="Camera" type="Camera2D" parent="."]
+offset = Vector2(0, -50)
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 12.0
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_top_margin = 0.8
+drag_bottom_margin = 0.0
+editor_draw_drag_margin = true
+metadata/_edit_lock_ = true
+
+[node name="Smoothing2D" type="Node2D" parent="."]
+script = ExtResource("2_b50jg")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Smoothing2D"]
+sprite_frames = SubResource("SpriteFrames_r6ynm")
+animation = &"looking_left"
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, 1)
+shape = SubResource("RectangleShape2D_w31ol")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+
+[node name="JumpParticles" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 16
+process_material = SubResource("ParticleProcessMaterial_aw4tq")
+lifetime = 0.3
+one_shot = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_hhg0d")
+}
+
+[node name="HookBase" type="RigidBody2D" parent="."]
+position = Vector2(0, 1)
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HookBase"]
+position = Vector2(0, -10)
+shape = SubResource("RectangleShape2D_ahj47")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="."]
+position = Vector2(0, -6)
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("..")
+node_b = NodePath("../HookBase")

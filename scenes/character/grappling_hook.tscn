@@ -1,0 +1,99 @@
+[gd_scene load_steps=4 format=3 uid="uid://b2wdh0olth8lw"]
+
+[ext_resource type="PackedScene" uid="uid://6chdo42cyucp" path="res://scenes/character/grappling_hook_segment.tscn" id="1_klbwn"]
+[ext_resource type="Script" path="res://scripts/character/grappling_hook.gd" id="1_mlvap"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k3v22"]
+size = Vector2(4, 4)
+
+[node name="GrapplingHook" type="Node2D"]
+script = ExtResource("1_mlvap")
+
+[node name="RopeBase" type="RigidBody2D" parent="."]
+position = Vector2(0, 4)
+collision_layer = 4
+max_contacts_reported = 1
+contact_monitor = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RopeBase"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_k3v22")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="."]
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../RopeBase")
+node_b = NodePath("../Segment1")
+
+[node name="Segment1" parent="." instance=ExtResource("1_klbwn")]
+position = Vector2(0, 4)
+collision_layer = 4
+can_sleep = false
+
+[node name="PinJoint2D2" type="PinJoint2D" parent="."]
+position = Vector2(0, 8)
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment1")
+node_b = NodePath("../Segment2")
+
+[node name="Segment2" parent="." instance=ExtResource("1_klbwn")]
+position = Vector2(0, 12)
+collision_layer = 4
+can_sleep = false
+
+[node name="PinJoint2D3" type="PinJoint2D" parent="."]
+position = Vector2(0, 16)
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment2")
+node_b = NodePath("../Segment3")
+
+[node name="Segment3" parent="." instance=ExtResource("1_klbwn")]
+position = Vector2(0, 20)
+collision_layer = 4
+can_sleep = false
+
+[node name="PinJoint2D4" type="PinJoint2D" parent="."]
+position = Vector2(0, 24)
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment3")
+node_b = NodePath("../Segment4")
+
+[node name="Segment4" parent="." instance=ExtResource("1_klbwn")]
+position = Vector2(0, 28)
+collision_layer = 4
+can_sleep = false
+
+[node name="PinJoint2D5" type="PinJoint2D" parent="."]
+position = Vector2(0, 32)
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment4")
+node_b = NodePath("../Segment5")
+
+[node name="Segment5" parent="." instance=ExtResource("1_klbwn")]
+position = Vector2(0, 36)
+collision_layer = 4
+can_sleep = false
+
+[node name="PinJoint2D6" type="PinJoint2D" parent="."]
+position = Vector2(0, 40)
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment5")
+node_b = NodePath("../Segment6")
+
+[node name="Segment6" parent="." instance=ExtResource("1_klbwn")]
+position = Vector2(0, 44)
+collision_layer = 4
+can_sleep = false
+
+[node name="CharacterJoint" type="PinJoint2D" parent="."]
+position = Vector2(0, 48)
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment6")
+bias = 0.9
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = 8.0
+offset_right = 14.0
+offset_bottom = 5.0
+color = Color(1, 0, 0, 1)
+
+[connection signal="body_entered" from="RopeBase" to="." method="_on_rope_base_body_entered"]
