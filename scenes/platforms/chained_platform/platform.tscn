@@ -1,0 +1,234 @@
+[gd_scene load_steps=7 format=3 uid="uid://b2wdh0olth8lw"]
+
+[ext_resource type="PackedScene" uid="uid://6chdo42cyucp" path="res://scenes/platforms/chained_platform/chain_segment.tscn" id="1_dmv1m"]
+[ext_resource type="Script" path="res://scripts/platforms/chained_platform.gd" id="1_xrcrt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k3v22"]
+size = Vector2(4, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pdp6f"]
+size = Vector2(36, 4)
+
+[sub_resource type="Animation" id="Animation_u6w2a"]
+resource_name = "swing"
+length = 3.0
+loop_mode = 1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [Vector2(-300, 0)],
+"method": &"platform_impulse"
+}, {
+"args": [Vector2(300, 0)],
+"method": &"platform_impulse"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_x7dhp"]
+_data = {
+"swing": SubResource("Animation_u6w2a")
+}
+
+[node name="ChainPlatform" type="Node2D"]
+script = ExtResource("1_xrcrt")
+
+[node name="ChainBase" type="StaticBody2D" parent="."]
+position = Vector2(0, 4)
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChainBase"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_k3v22")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="."]
+position = Vector2(-1, 2)
+rotation = 0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../ChainBase")
+node_b = NodePath("../Segment1")
+
+[node name="Segment1" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(-2, 6)
+rotation = 0.261799
+
+[node name="PinJoint2D3" type="PinJoint2D" parent="."]
+position = Vector2(-3, 10)
+rotation = 0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment1")
+node_b = NodePath("../Segment3")
+
+[node name="Segment3" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(-4, 14)
+rotation = 0.261799
+
+[node name="PinJoint2D4" type="PinJoint2D" parent="."]
+position = Vector2(-5, 18)
+rotation = 0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment3")
+node_b = NodePath("../Segment4")
+
+[node name="Segment4" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(-6, 22)
+rotation = 0.261799
+
+[node name="PinJoint2D5" type="PinJoint2D" parent="."]
+position = Vector2(-7, 26)
+rotation = 0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment4")
+node_b = NodePath("../Segment5")
+
+[node name="Segment5" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(-8, 30)
+rotation = 0.261799
+
+[node name="PinJoint2D6" type="PinJoint2D" parent="."]
+position = Vector2(-9, 34)
+rotation = 0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment5")
+node_b = NodePath("../Segment6")
+
+[node name="Segment6" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(-10, 38)
+rotation = 0.261799
+
+[node name="PinJoint2D7" type="PinJoint2D" parent="."]
+position = Vector2(-11, 42)
+rotation = 0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment6")
+node_b = NodePath("../Segment7")
+
+[node name="Segment7" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(-12, 46)
+rotation = 0.261799
+
+[node name="PinJoint2D8" type="PinJoint2D" parent="."]
+position = Vector2(-13, 50)
+rotation = 0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment7")
+node_b = NodePath("../Segment8")
+
+[node name="Segment8" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(-14, 54)
+rotation = 0.261799
+
+[node name="PinJoint2D2" type="PinJoint2D" parent="."]
+position = Vector2(1, 2)
+rotation = -0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../ChainBase")
+node_b = NodePath("../Segment2")
+
+[node name="Segment2" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(2, 6)
+rotation = -0.261799
+
+[node name="PinJoint2D9" type="PinJoint2D" parent="."]
+position = Vector2(3, 10)
+rotation = -0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment2")
+node_b = NodePath("../Segment9")
+
+[node name="Segment9" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(4, 14)
+rotation = -0.261799
+
+[node name="PinJoint2D10" type="PinJoint2D" parent="."]
+position = Vector2(5, 18)
+rotation = -0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment9")
+node_b = NodePath("../Segment10")
+
+[node name="Segment10" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(6, 22)
+rotation = -0.261799
+
+[node name="PinJoint2D11" type="PinJoint2D" parent="."]
+position = Vector2(7, 26)
+rotation = -0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment10")
+node_b = NodePath("../Segment11")
+
+[node name="Segment11" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(8, 30)
+rotation = -0.261799
+
+[node name="PinJoint2D12" type="PinJoint2D" parent="."]
+position = Vector2(9, 34)
+rotation = -0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment11")
+node_b = NodePath("../Segment12")
+
+[node name="Segment12" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(10, 38)
+rotation = -0.261799
+
+[node name="PinJoint2D13" type="PinJoint2D" parent="."]
+position = Vector2(11, 42)
+rotation = -0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment12")
+node_b = NodePath("../Segment13")
+
+[node name="Segment13" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(12, 46)
+rotation = -0.261799
+
+[node name="PinJoint2D14" type="PinJoint2D" parent="."]
+position = Vector2(13, 50)
+rotation = -0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment13")
+node_b = NodePath("../Segment14")
+
+[node name="Segment14" parent="." instance=ExtResource("1_dmv1m")]
+position = Vector2(14, 54)
+rotation = -0.261799
+
+[node name="PinJoint2D15" type="PinJoint2D" parent="."]
+position = Vector2(-15, 58)
+rotation = 0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment8")
+node_b = NodePath("../platform")
+
+[node name="PinJoint2D16" type="PinJoint2D" parent="."]
+position = Vector2(15, 58)
+rotation = -0.261799
+scale = Vector2(0.25, 0.25)
+node_a = NodePath("../Segment14")
+node_b = NodePath("../platform")
+
+[node name="platform" type="RigidBody2D" parent="."]
+position = Vector2(-18, 58)
+mass = 10.0
+
+[node name="ColorRect" type="ColorRect" parent="platform"]
+offset_right = 36.0
+offset_bottom = 4.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform"]
+position = Vector2(18, 2)
+shape = SubResource("RectangleShape2D_pdp6f")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_x7dhp")
+}
+autoplay = "swing"

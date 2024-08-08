@@ -1,9 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://dv6r14qcy74qk"]
+[gd_scene load_steps=11 format=3 uid="uid://dv6r14qcy74qk"]
 
 [ext_resource type="Script" path="res://scripts/character/character.gd" id="1_g361i"]
 [ext_resource type="Texture2D" uid="uid://cmdwm0d7ljjey" path="res://assets/character.png" id="2_31onf"]
 [ext_resource type="Script" path="res://addons/smoothing/smoothing_2d.gd" id="2_b50jg"]
-[ext_resource type="PackedScene" uid="uid://b2wdh0olth8lw" path="res://scenes/character/grappling_hook.tscn" id="2_x1rr5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ig21s"]
 atlas = ExtResource("2_31onf")
@@ -59,19 +58,17 @@ _data = {
 "death": SubResource("Animation_cuf1a")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ahj47"]
-size = Vector2(5, 5)
-
 [node name="Character" type="CharacterBody2D"]
+top_level = true
 script = ExtResource("1_g361i")
-hook_scene = ExtResource("2_x1rr5")
 
 [node name="Camera" type="Camera2D" parent="."]
-offset = Vector2(0, -50)
+offset = Vector2(0, -60)
+limit_left = 0
+limit_bottom = 80
 limit_smoothed = true
 position_smoothing_enabled = true
-position_smoothing_speed = 12.0
-drag_horizontal_enabled = true
+position_smoothing_speed = 20.0
 drag_vertical_enabled = true
 drag_top_margin = 0.8
 drag_bottom_margin = 0.0
@@ -84,6 +81,7 @@ script = ExtResource("2_b50jg")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Smoothing2D"]
 sprite_frames = SubResource("SpriteFrames_r6ynm")
 animation = &"looking_left"
+autoplay = "looking_left"
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -103,17 +101,3 @@ one_shot = true
 libraries = {
 "": SubResource("AnimationLibrary_hhg0d")
 }
-
-[node name="HookBase" type="RigidBody2D" parent="."]
-position = Vector2(0, 1)
-collision_layer = 4
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HookBase"]
-position = Vector2(0, -10)
-shape = SubResource("RectangleShape2D_ahj47")
-
-[node name="PinJoint2D" type="PinJoint2D" parent="."]
-position = Vector2(0, -6)
-scale = Vector2(0.25, 0.25)
-node_a = NodePath("..")
-node_b = NodePath("../HookBase")
