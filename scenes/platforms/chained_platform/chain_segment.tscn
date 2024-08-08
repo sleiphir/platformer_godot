@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://6chdo42cyucp"]
 
-[ext_resource type="Texture2D" uid="uid://bivhx6ouvycqh" path="res://assets/rope.png" id="1_gwmaq"]
+[ext_resource type="Texture2D" uid="uid://bivhx6ouvycqh" path="res://assets/chain.png" id="1_qexne"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ace5a"]
 radius = 2.0
@@ -15,5 +15,5 @@ shape = SubResource("CapsuleShape2D_ace5a")
 metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_gwmaq")
+texture = ExtResource("1_qexne")
 metadata/_edit_lock_ = true
