@@ -8,8 +8,6 @@ const SPEED = 240.0
 const JUMP_VELOCITY = -500.0
 const FRICTION_COEFFICIENT = 9.0/10 # falls 90% of base fall speed
 const JUMP_TOLERANCE_THRESHOLD = 3.0/60 # 5 frames of tolerance at 60 fps when jumping
-const CAMERA_OFFSET = 80 # How much the camera puts the player off-center (positive or negative based on direction)
-const CAMERA_TWEEN_SPEED = 0.5 # Speed in seconds at which the camera tweening executes
 const PUSH_FORCE = 120.0 # Player inertia
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -26,6 +24,7 @@ var CAN_MOVE_FREELY = true # wether the player can alter it's velocity
 
 # General flags
 var IS_DEAD = false # wether the player is currently dead
+var AUTO_REVIVE = true # wether to revive the player automatically
 
 # Jump tolerance timer (resets everytime the player is on the ground)
 var jump_timer = 0 # We are not using a Timer node as the value is very precise and close to 0
@@ -59,9 +58,6 @@ func _physics_process(delta):
 	# Handle movement actions and modify the velocity vector
 	handle_movement(delta)
 	
-	# Change the camera's x offset when the player goes the opposite direction
-	#handle_camera(delta)
-	
 	# Update sprite based on direction
 	if velocity.x < 0:
 		$Smoothing2D/AnimatedSprite2D.flip_h = false
@@ -78,25 +74,6 @@ func _physics_process(delta):
 	
 	# Set at the end of the process loop to be used in the next frame
 	last_direction = current_direction
-
-
-# Modify the camera settings based on the player's position
-func handle_camera(_delta) -> void:
-	# Stop tweening the camera's offset when the player stops moving
-	if pow(velocity.x, 2) < 1:
-		if camera_tween:
-			camera_tween.kill()
-	# Modify the camera's x position when the player start going in the opposite direction
-	if current_direction != last_direction:
-		if camera_tween:
-			camera_tween.kill()
-		var offset = Vector2(0, -60)
-		match current_direction:
-			Direction.RIGHT: offset.x = CAMERA_OFFSET
-			Direction.LEFT: offset.x = -CAMERA_OFFSET
-			Direction.NONE: offset.x = $Camera.offset.x
-		camera_tween = get_tree().create_tween()
-		camera_tween.tween_property($Camera, "offset", offset, CAMERA_TWEEN_SPEED)
 
 
 # Calculates the velocity vector of the player each frame
@@ -181,15 +158,16 @@ func handle_jump(delta) -> void:
 func die(body):
 	hide()
 	IS_DEAD = true
-	CAN_MOVE_FREELY = false
 	death_count += 1
-	create_tween().tween_property(self, "position", starting_position, .75)
 	await get_tree().create_timer(.75).timeout
-	position = starting_position
-	revive()
+	if AUTO_REVIVE:
+		revive()
 
 
 func revive():
-	show()
+	# Go back to the starting position
+	create_tween().tween_property(self, "position", starting_position, .75).set_ease(Tween.EASE_OUT)
+	await get_tree().create_timer(.75).timeout
 	IS_DEAD = false
-	CAN_MOVE_FREELY = true
+	show()
+
